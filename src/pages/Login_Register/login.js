@@ -27,7 +27,8 @@ const LoginScreen = ({navigation}) => {
              <View style={{padding: 40}}>
                 <Text style={{color:'#ffffff', fontSize:34, fontFamily:'Roboto', fontWeight:'bold'}}>Login</Text>
                 <Text style={{color:'#ffffff'}}>Belum punya akun?
-                    <Text style={{color:'#ffe77aff', fontStyle:'italic', fontWeight:'bold'}}> Daftar</Text>
+                    <Text style={{color:'#ffe77aff', fontStyle:'italic', fontWeight:'bold'}}
+                    onPress={ () => navigation.navigate('RegisScreen')}> Daftar</Text>
                 </Text>
                 {/*Form input View*/}
                 <View floatingLabel style={styles.inputView} >
@@ -128,6 +129,7 @@ const styles = StyleSheet.create({
         marginBottom:10
       },
       loginText:{
-        color:"white"
+        color:"white",
+        fontWeight:'bold'
       }
 })
