@@ -1,8 +1,38 @@
 import { ImageBackground, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { splashBackground, logo } from '../../assets'
+import { authentication } from '../../../firebase/firebase-config'
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const RegisScreen = ({navigation}) => {
+  const [isSignedIn, setIsSignIn] = useState(false);
+  //Text input state
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+
+  useEffect(() => {
+    const unsubscribe = authentication.onAuthStateChanged(user => {
+      if (user) {
+        navigation.replace("LoginScreen")
+      }
+    })
+
+    return unsubscribe
+  }, [])
+
+  const handleSignUp = () => {
+    createUserWithEmailAndPassword(authentication, email, password)
+    .then((userCredentials) => {
+      const user = userCredentials.user;
+      console.log('Registered with:', user.email);
+      
+    })
+    .catch((err) => {
+      alert(err.message)
+    })
+  }
+
+
   return (
       <ImageBackground source={splashBackground} style={styles.background}>   
             <View style={styles.brandView}>
@@ -18,17 +48,20 @@ const RegisScreen = ({navigation}) => {
             <View floatingLabel style={styles.inputViewUsername} >
                     <TextInput  
                     style={styles.inputText}
-                    placeholder="Username..." 
+                    placeholder="Email..." 
                     placeholderTextColor="#ffffff"
-                    onChangeText={text => this.setState({email:text})}/>
+                    value={email}
+                    onChangeText={text => setEmail(text)}/>
             </View>
             {/*Form input View*/}
             <View floatingLabel style={styles.inputViewEmail} >
                     <TextInput  
                     style={styles.inputText}
-                    placeholder="Email..." 
+                    placeholder="Password..." 
                     placeholderTextColor="#ffffff"
-                    onChangeText={text => this.setState({email:text})}/>
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    secureTextEntry/>
             </View>
             {/*Form input View*/}
             <View floatingLabel style={styles.inputViewPassword} >
@@ -40,7 +73,7 @@ const RegisScreen = ({navigation}) => {
                     secureTextEntry/>
             </View>
             <TouchableOpacity style={styles.regisBtn} 
-                onPress={ () => navigation.navigate('LoginScreen')}>
+                onPress={handleSignUp}>
                     <Text style={{color:'white', fontWeight:'bold'}}>Register</Text>
             </TouchableOpacity>
             <Text style={{justifyContent:'center', color:"white"}}>Sudah punya akun ?

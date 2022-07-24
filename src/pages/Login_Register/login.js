@@ -3,12 +3,38 @@ import { StyleSheet, Text, View,
     Dimensions, Image, TextInput, 
     TouchableOpacity, Button
 } from 'react-native'
-import React from 'react'
+import React, {useEffect, useState }from 'react'
 import { loginBackground, logo } from '../../assets'
+import { authentication } from '../../../firebase/firebase-config'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 
 
 const LoginScreen = ({navigation}) => {
+  //const [isSignedIn, setIsSignIn] = useState(false);
+  //Text input state
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+  useEffect(() => {
+    const unsubscribe = authentication.onAuthStateChanged(user => {
+      if (user) {
+        navigation.replace("MainApp")
+      }
+    })
+
+    return unsubscribe
+  }, [])
+
+  const handleLogin = () => {
+      signInWithEmailAndPassword(authentication,email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        
+        console.log('Logged in with:', user.email);
+      })
+      .catch(error => alert(error.message))
+  }
+ 
   return (
 
     <ScrollView 
@@ -34,9 +60,9 @@ const LoginScreen = ({navigation}) => {
                 <View floatingLabel style={styles.inputView} >
                     <TextInput  
                     style={styles.inputText}
-                    placeholder="Username..." 
+                    placeholder="Email..." 
                     placeholderTextColor="#ffffff"
-                    onChangeText={text => this.setState({email:text})}/>
+                    onChangeText={text => setEmail(text)}/>
                 </View>
                 <View style={styles.inputViewPassword} >
                     <TextInput  
@@ -44,13 +70,13 @@ const LoginScreen = ({navigation}) => {
                     style={styles.inputText}
                     placeholder="Password..." 
                     placeholderTextColor="#ffffff"
-                    onChangeText={text => this.setState({password:text})}/>
+                    onChangeText={text => setPassword(text)}/>
                 </View>
                 <TouchableOpacity>
                     <Text style={styles.forgot}>Lupa Password?</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.loginBtn} 
-                onPress={ () => navigation.navigate('MainApp')}>
+                onPress={handleLogin}>
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
              </View>
