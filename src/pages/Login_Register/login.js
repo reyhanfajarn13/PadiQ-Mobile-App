@@ -3,6 +3,7 @@ import { StyleSheet, Text, View,
     Dimensions, Image, TextInput, 
     TouchableOpacity, Button
 } from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useEffect, useState }from 'react'
 import { loginBackground, logo } from '../../assets'
 import { authentication } from '../../../firebase/firebase-config'
@@ -32,7 +33,7 @@ const LoginScreen = ({navigation}) => {
         
         console.log('Logged in with:', user.email);
       })
-      .catch(error => alert(error.message))
+      .catch(error => alert('Invalid Email & Password'))
   }
  
   return (
@@ -152,7 +153,9 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center",
         marginTop:40,
-        marginBottom:10
+        marginBottom:10,
+        borderWidth:2,
+        borderColor:'#ffffff'
       },
       loginText:{
         color:"white",
