@@ -26,14 +26,14 @@ const LoginScreen = ({navigation}) => {
     return unsubscribe
   }, [])
 
-  const handleLogin = () => {
-      signInWithEmailAndPassword(authentication,email, password)
+const handleLogin = async () => {
+      await signInWithEmailAndPassword(authentication,email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
         
         console.log('Logged in with:', user.email);
       })
-      .catch(error => alert('Invalid Email & Password'))
+      .catch(error => alert('Email & Password Tidak Valid'))
   }
  
   return (

@@ -1,14 +1,19 @@
-import { ImageBackground, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native'
+import { ImageBackground, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { splashBackground, logo } from '../../assets'
-import { authentication } from '../../../firebase/firebase-config'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { authentication} from '../../../firebase/firebase-config'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
+
 
 const RegisScreen = ({navigation}) => {
-  const [isSignedIn, setIsSignIn] = useState(false);
+
   //Text input state
+  const [NamePassword,setNamePassword] = useState('')
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
+  const [isSecureEntry, setIsSecureEntry] = useState(true)
+
 
   useEffect(() => {
     const unsubscribe = authentication.onAuthStateChanged(user => {
@@ -20,28 +25,40 @@ const RegisScreen = ({navigation}) => {
     return unsubscribe
   }, [])
 
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(authentication, email, password)
+  const handleSignUp = async() => { 
+    if (password === NamePassword && password.length > 5) {
+    await createUserWithEmailAndPassword(authentication, email, password)
     .then((userCredentials) => {
-      const user = userCredentials.user;
-      console.log('Registered with:', user.email);
-      
+        const user = userCredentials.user;
+        console.log('Registered with:', user.email);
     })
     .catch((err) => {
-      alert(err.message)
+      if(err.code === 'auth/email-already-in-use'){
+        alert('Email sudah digunakan!')
+      }
+      if(err.code === 'auth/invalid-email'){
+        alert('Alamat email tidak valid.')
+      }
     })
+    }
+    else{
+      alert('Password tidak cocok & kurang dari 6 karakter')
+    }
   }
 
 
+
   return (
-      <ImageBackground source={splashBackground} style={styles.background}>   
+      <ImageBackground source={splashBackground} style={styles.background}>  
+      <ScrollView> 
             <View style={styles.brandView}>
-                <Text style={styles.brandViewText}>Welcome<Text style={{fontFamily: 'Roboto',
-        fontSize: 23,
-        fontWeight: 'bold',
-        color:'#ffe77aff',
-        fontStyle:'italic',}}> Padi-zen!</Text></Text>
-                <Image source={logo}/>     
+                <Text style={styles.brandViewText}>Welcome<Text style={{
+                  fontFamily: 'Roboto',
+                  fontSize: 23,
+                  fontWeight: 'bold',
+                  color:'#ffe77aff',
+                  fontStyle:'italic',}}> Padi-zen!</Text></Text>
+                <Image source={logo} style={{opacity:0.9}}/>     
             </View>
             {/*Form input View*/}
         <View style={{alignItems:'center', marginVertical:100}}>
@@ -60,26 +77,32 @@ const RegisScreen = ({navigation}) => {
                     placeholder="Password..." 
                     placeholderTextColor="#ffffff"
                     value={password}
-                    onChangeText={text => setPassword(text)}
-                    secureTextEntry/>
+                    onChangeText={text => 
+                      setPassword(text)}
+                    maxLength={15}
+                    secureTextEntry={isSecureEntry}
+                    />
             </View>
             {/*Form input View*/}
             <View floatingLabel style={styles.inputViewPassword} >
                     <TextInput  
                     style={styles.inputText}
-                    placeholder="Password..." 
+                    placeholder="Konfirmasi Password..." 
                     placeholderTextColor="#ffffff"
-                    onChangeText={text => this.setState({email:text})}
-                    secureTextEntry/>
+                    onChangeText={text => setNamePassword(text)}
+                    maxLength={15}
+                    secureTextEntry={isSecureEntry}
+                    />
             </View>
             <TouchableOpacity style={styles.regisBtn} 
                 onPress={handleSignUp}>
-                    <Text style={{color:'white', fontWeight:'bold'}}>Register</Text>
+                    <Text style={{color:'white', fontWeight:'bold'}}>DAFTAR</Text>
             </TouchableOpacity>
             <Text style={{justifyContent:'center', color:"white"}}>Sudah punya akun ?
              <Text style={{color:'#ffe77aff', fontWeight:'bold'}} 
-             onPress={() => navigation.navigate('LoginScreen')}> Sign In</Text></Text>
+             onPress={() => navigation.navigate('LoginScreen')}> Login</Text></Text>
         </View> 
+        </ScrollView>
       </ImageBackground>
       
         
@@ -128,7 +151,7 @@ inputViewUsername:{
     height:50,
     marginBottom:20,
     justifyContent:"center",
-    padding:20
+    padding:20,
   },
 inputViewPassword:{
     width:"80%",

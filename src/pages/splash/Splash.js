@@ -8,7 +8,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 const Splash = ({ navigation }) => {
  useEffect(() => {
     setTimeout( () => {
-      navigation.replace('LoginScreen');
+      navigation.replace('WelcomeScreen');
     }, 3000) 
   }, [navigation]);
   return (

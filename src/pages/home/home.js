@@ -1,15 +1,28 @@
 import { StyleSheet, Text, View, ImageBackground,
         ScrollView, Dimensions, TouchableOpacity, 
-        Image} from 'react-native';
-import React from 'react';
+        Image,
+        BackHandler} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import openGallery from './API/importPicture';
 import takePhoto from './API/takePicture';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { homeBackground, logo, loginBackground } from '../../assets';
+import { authentication } from '../../../firebase/firebase-config';
+import MainApp from '../../navigation/TabNavigator';
+
 
 const Home = ({navigation}) => {
   const [photo, setPhoto] = React.useState(null);
   const [photoShow, setPhotoShow] = React.useState(null); 
+  const user = authentication.currentUser;
+  {/*Button back disactivated*/}
+  /*useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
+    return () => backHandler.remove()
+
+  }, [])*/
+  
+  
   
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#D9D9D9' }}
@@ -31,30 +44,36 @@ const Home = ({navigation}) => {
         {/*ACC SECTION NAME AND PHOTOS*/}
           <View style={styles.nameFormContainer}>
           <TouchableOpacity style={styles.ProfilePicture} onPress={openGallery}>
+            <View style={{alignItems:'center'}}>
+            <Ionicons name='person-circle-outline' size={63} style={{color:'black'}}/>
+            </View>
           </TouchableOpacity>
           <View style={{flexDirection:'column'}}>
-              <Text style={{fontSize:15, fontWeight:'bold', color:'black',
-              marginRight:53, marginTop:10, marginBottom:3}}>Agus Budiono</Text>
-              <Text style={{fontSize:13, marginBottom:30, fontStyle:'italic'}}>agusbudiono@gmail.com</Text>
+              <Text style={{fontSize:30, fontWeight:'bold',
+              marginRight:53, marginTop:10, marginBottom:3
+              , color:'#338333', fontStyle:'italic'}}>Hai,</Text>
+              <Text style={{fontSize:17, marginBottom:30, 
+                fontStyle:'italic', color:'black', fontWeight:'bold'}}>{user.email}</Text>
           </View>
           </View>
           
           {/*Predict Button View*/ }
-          <TouchableOpacity style={styles.PredictButton} onPress={takePhoto}>
+          <TouchableOpacity style={styles.PredictButton} onPress={() => navigation.navigate('PredictionScreen')}>
             <Image source={logo} style={{width:40, height:40, marginTop:5}}/>
             <Text style={{
-                         color:'#ffffff',
+                         color:'#E8E3DA',
                          justifyContent:'space-between',
                          fontSize:13.5,
                          fontWeight:'bold',
                          marginLeft:20,
                          marginRight:15,
-                         marginTop:15
+                         marginTop:15,
+                         fontFamily:'roboto'
                         }}>Prediksi Penyakit Padi Sekarang
                
             </Text>
             <View style={{alignItems:'flex-end'}}>
-            <Ionicons name="camera-outline" color={'#ffffff'} size={30} style={{marginTop:8}} />
+            <Ionicons name="camera-outline" color={'#E8E3DA'} size={30} style={{marginTop:8}} />
             </View>
           </TouchableOpacity>
           {/*History Section*/}
@@ -66,26 +85,44 @@ const Home = ({navigation}) => {
                         alignItems:'stretch',
                         marginTop:10,
                         marginLeft:-10
-                        }}>Riwayat Penelurusan
+                        }}>Daftar Penyakit
                         </Text>
-          <TouchableOpacity>
+          <TouchableOpacity style={{alignItems:'flex-end', flexDirection:'row', marginLeft:'15%'}}  onPress={() => navigation.navigate("News")}>
           <Text  style={{
                         color:'#cc7722',
                         fontSize:11,
-                        alignItems:'flex-end',
                         marginTop:13,
                         marginLeft:70
                         }}
                         >Tampilkan Semua</Text>
-          <Ionicons name='arrow-forward-circle' size={15} style={{marginLeft:165, marginTop:-15, color:'#cc7722'}} />
+          <Ionicons name='arrow-forward-circle' size={15} style={{ marginTop:-15, color:'#cc7722'}} />
           </TouchableOpacity>
           </View>
           <ScrollView horizontal>
-            <View style={styles.historyContainer}></View>
-            <View style={styles.historyContainer}></View>
-            <View style={styles.historyContainer}></View>
-            <View style={styles.historyContainer}></View>
-            <View style={styles.historyContainer}></View>
+            <View style={styles.historyContainer}>
+              <TouchableOpacity onPress={() => navigation.navigate("News")}>
+                <Image style={styles.cardImage} source={{uri:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Rice_plants_affected_by_tungro_disease1.jpg/640px-Rice_plants_affected_by_tungro_disease1.jpg'}}/>
+                <Text style={styles.cardText}>Tungro Padi</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.historyContainer}>
+            <TouchableOpacity  onPress={() => navigation.navigate("News")}>
+                <Image style={styles.cardImage} source={{uri:'https://medialampung.co.id/wp-content/uploads/2020/09/blas.jpg'}}/>
+                <Text style={styles.cardText}>Blas Padi</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.historyContainer}>
+            <TouchableOpacity  onPress={() => navigation.navigate("News")}>
+                <Image style={styles.cardImage} source={{uri:'https://krishijagran.com/media/42176/pest.png'}}/>
+                <Text style={styles.cardText}>Brown Spot Padi</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.historyContainer}>
+            <TouchableOpacity  onPress={() => navigation.navigate("News")}>
+                <Image style={styles.cardImage} source={{uri:'http://www.knowledgebank.irri.org/images/stories/bacterial-leaf-blight-1.JPG'}}/>
+                <Text style={styles.cardText}>Bacterial Light</Text>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
           {/*FITUR TAMBAHAN SECTION*/}
           <Text style={{
@@ -99,14 +136,46 @@ const Home = ({navigation}) => {
                         </Text>
           <View>
             <View style={{flexDirection:'row'}}>
-              <View style={styles.fiturContainer}></View>
-              <View style={styles.fiturContainer}></View>
-              <View style={styles.fiturContainer}></View> 
+              <TouchableOpacity onPress={() => navigation.navigate('PredictionScreen')}>
+              <View style={styles.fiturContainer}>
+                <View style={styles.fiturelogocontainer} >
+                <Ionicons name='rose' size={40} style={{color:'#E8E3DA', marginVertical:'15%'}}/>
+                <Text style={{color:'#E8E3DA', marginTop:-10, fontSize:10, fontWeight:'bold'}}>Prediksi Padi</Text>
+                </View>
+              </View>
+              </TouchableOpacity>
+              <View style={styles.fiturContainer}>
+                <View style={styles.fiturelogocontainer} >
+                <Ionicons name='speedometer' size={40} style={{color:'#E8E3DA', marginVertical:'15%'}}/>
+                <Text style={{color:'#E8E3DA', marginTop:-10, fontSize:10, fontWeight:'bold'}}>Pantau Sawah</Text>
+                </View>
+              </View>
+              <View style={styles.fiturContainerAdd}>
+              <View style={styles.fiturelogocontainer} >
+                <Ionicons name='add-circle' size={50} style={{color:'#E8E3DA', marginVertical:'15%'}}/>
+                <Text style={{color:'#E8E3DA', marginTop:-10, fontSize:10, fontWeight:'bold'}}></Text>
+                </View>
+              </View> 
             </View>
             <View style={{flexDirection:'row'}}>
-              <View style={styles.fiturContainer}></View>
-              <View style={styles.fiturContainer}></View>
-              <View style={styles.fiturContainer}></View> 
+              <View style={styles.fiturContainerAdd}>
+              <View style={styles.fiturelogocontainer} >
+                <Ionicons name='add-circle' size={50} style={{color:'#E8E3DA', marginVertical:'15%'}}/>
+                <Text style={{color:'#E8E3DA', marginTop:-10, fontSize:10, fontWeight:'bold'}}></Text>
+                </View>
+              </View>
+              <View style={styles.fiturContainerAdd}>
+              <View style={styles.fiturelogocontainer} >
+                <Ionicons name='add-circle' size={50} style={{color:'#E8E3DA', marginVertical:'15%'}}/>
+                <Text style={{color:'#E8E3DA', marginTop:-10, fontSize:10, fontWeight:'bold'}}></Text>
+                </View>
+              </View>
+              <View style={styles.fiturContainerAdd}>
+              <View style={styles.fiturelogocontainer} >
+                <Ionicons name='add-circle' size={50} style={{color:'#E8E3DA', marginVertical:'15%'}}/>
+                <Text style={{color:'#E8E3DA', marginTop:-10, fontSize:10, fontWeight:'bold'}}></Text>
+                </View>
+              </View> 
             </View>
           </View>
         </View>
@@ -167,18 +236,35 @@ const styles = StyleSheet.create({
     height: 70,
     marginBottom:20,
     marginRight:30,
-    elevation:10
+    elevation:10,
   },
   historyContainer:{
+    flex:1,
     width: 150,
     height: 100,
     marginBottom:10,
     marginRight:10,
     marginTop:10,
     borderRadius:20,
-    backgroundColor:'#338333',
+    backgroundColor:'#e5e4e2',
     elevation:8,
     shadowColor:'black',
+  },
+  cardImage:{
+    width:'100%',
+    height:70,
+    borderTopLeftRadius:20,
+    borderTopRightRadius:20,
+    borderBottomRightRadius:15,
+    resizeMode:'cover'
+  },
+  cardText:{
+    fontSize:15,
+    marginHorizontal:'6%',
+    color:'#255045',
+    fontWeight:'bold',
+    marginVertical:'2%',
+    fontStyle:'italic'
   },
   fiturContainer:{
     width: 80,
@@ -187,8 +273,31 @@ const styles = StyleSheet.create({
     marginRight:25,
     marginTop:10,
     borderRadius:20,
-    backgroundColor:'#338333',
+    backgroundColor:'#559E55',
     elevation:8,
     shadowColor:'black',
+  },
+  fiturContainerAdd:{
+    opacity:0.6,
+    width: 80,
+    height: 80,
+    marginBottom:10,
+    marginRight:25,
+    marginTop:10,
+    borderRadius:20,
+    backgroundColor:'#559E55',
+    elevation:8,
+    shadowColor:'black',
+  },
+  fiturelogocontainer:{
+    flexDirection:'column',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  fiturPict:{
+    width:'100%',
+    height:'60%',
+    resizeMode:'cover',
+    marginVertical:'20%'
   }
 })
