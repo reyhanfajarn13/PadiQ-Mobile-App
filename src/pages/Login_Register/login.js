@@ -63,6 +63,7 @@ const handleLogin = async () => {
                     style={styles.inputText}
                     placeholder="Email..." 
                     placeholderTextColor="#ffffff"
+                    keyboardType="email-address"
                     onChangeText={text => setEmail(text)}/>
                 </View>
                 <View style={styles.inputViewPassword} >

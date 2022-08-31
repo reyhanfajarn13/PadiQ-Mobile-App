@@ -67,6 +67,7 @@ const RegisScreen = ({navigation}) => {
                     style={styles.inputText}
                     placeholder="Email..." 
                     placeholderTextColor="#ffffff"
+                    keyboardType='email-address'
                     value={email}
                     onChangeText={text => setEmail(text)}/>
             </View>

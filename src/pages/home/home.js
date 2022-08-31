@@ -114,13 +114,13 @@ const Home = ({navigation}) => {
             <View style={styles.historyContainer}>
             <TouchableOpacity  onPress={() => navigation.navigate("News")}>
                 <Image style={styles.cardImage} source={{uri:'https://krishijagran.com/media/42176/pest.png'}}/>
-                <Text style={styles.cardText}>Brown Spot Padi</Text>
+                <Text style={styles.cardText}>Bercak Coklat Daun</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.historyContainer}>
             <TouchableOpacity  onPress={() => navigation.navigate("News")}>
                 <Image style={styles.cardImage} source={{uri:'http://www.knowledgebank.irri.org/images/stories/bacterial-leaf-blight-1.JPG'}}/>
-                <Text style={styles.cardText}>Bacterial Light</Text>
+                <Text style={styles.cardText}>Hawar Daun</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

@@ -1,7 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity} from 'react-native'
+import { StyleSheet,
+   Text, View, 
+   TouchableOpacity, ScrollView,
+  ImageBackground, Dimensions,
+  Image} from 'react-native'
 import React from 'react'
 import { authentication } from '../../../firebase/firebase-config'
 import { getAuth, signOut } from "firebase/auth";
+import { splashBackground, logo} from '../../assets';
 
 
 const Account = ({navigation}) => {
@@ -14,12 +19,14 @@ const Account = ({navigation}) => {
       console.log(error)
     });
   }
-  return (
+  return ( 
+    
     <View style={styles.container}>
       <TouchableOpacity  onPress={handleSignOut} style={styles.btnView}>
         <Text style={{fontWeight:'bold',fontSize:20,color:'#ffffff'}}>Keluar</Text>
       </TouchableOpacity>
     </View>
+    
   )
 }
 
@@ -43,5 +50,12 @@ const styles = StyleSheet.create({
     marginBottom:10,
     borderWidth:5,
     borderColor:'#ffffff'
-}
+},
+brandView:{
+  flex:1,
+  justifyContent:'flex-start',
+  alignItems:'flex-start',
+  marginVertical:60,
+  marginHorizontal:40
+},
 })

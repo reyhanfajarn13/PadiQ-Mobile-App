@@ -16,9 +16,6 @@ import axios from 'axios';
 import React, {useEffect, useState }from 'react';
 import Config from 'react-native-config';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker'
-import { async } from '@firebase/util';
-
-
 
 
 axios.interceptors.request.use(
@@ -26,7 +23,7 @@ axios.interceptors.request.use(
     let request = config;
     request.headers = {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Accept': 'application/json',
     };
     request.url = configureUrl(config.url);
     return request;
