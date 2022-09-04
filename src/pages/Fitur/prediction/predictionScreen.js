@@ -16,7 +16,7 @@ import axios from 'axios';
 import React, {useEffect, useState }from 'react';
 import Config from 'react-native-config';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker'
-
+import PermissionsService, {isIOS} from '../../../../Permissions';
 
 axios.interceptors.request.use(
   async config => {
@@ -51,6 +51,7 @@ const options = {
   includeBase64: true,
 };
 
+
  
 const PredictionScreen = () => {
   const [result, setResult] = useState('');
@@ -63,7 +64,7 @@ const PredictionScreen = () => {
       bodyFormData.append('file', params);
       const url = Config.URL;
       return axios
-        .post(url, bodyFormData)
+        .post('https://us-central1-padiq-355004.cloudfunctions.net/prediction', bodyFormData)
         .then(response => {
           resolve(response);
         })
@@ -74,8 +75,24 @@ const PredictionScreen = () => {
     });
   };
 
+  const manageCamera = async type => {
+    try {
+      if (!(await PermissionsService.hasCameraPermission())) {
+        return [];
+      } else {
+        if (type === 'Camera') {
+          openCamera();
+        } else {
+          openLibrary();
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const openCamera = async () => {
-    launchCamera(options, async response => {
+    launchCamera(takePhotoOptions, async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -136,7 +153,8 @@ const PredictionScreen = () => {
         source={splashBackground}
         style={{height:height, width:width}}
         />
-      <Text style={styles.title}>{'PadiQ \nAplikasi Prediksi'}</Text>
+      <Text style={styles.title}>{'PadiQ'}</Text>
+      <Text style={styles.subTitle}>{'Deteksikan Penyakitmu!'}</Text>
       <TouchableOpacity onPress={clearOutput} style={styles.clearStyle}>
         <Image source={{uri: 'clean'}} style={styles.clearImage} />
       </TouchableOpacity>
@@ -147,7 +165,7 @@ const PredictionScreen = () => {
       {(result && label && (
         <View style={styles.mainOuter}>
           <Text style={[styles.space, styles.labelText]}>
-            {'Label: \n'}
+            {'Jenis: \n'}
             <Text style={styles.resultText}>{label}</Text>
           </Text>
           <Text style={[styles.space, styles.labelText]}>
@@ -167,12 +185,12 @@ const PredictionScreen = () => {
     <TouchableOpacity 
       style={styles.btnStyle}
       activeOpacity={0.9} 
-      onPress={openLibrary}>
+      onPress={() => manageCamera('Photo')}>
       <Text style={styles.predictText}>Import Foto</Text>
     </TouchableOpacity>
     <TouchableOpacity 
       style={styles.btnStyle} 
-      onPress={openCamera}>
+      onPress={() => manageCamera('Camera')}>
       <Text style={styles.predictText}>Ambil Foto</Text>
     </TouchableOpacity>
     </View>
@@ -191,12 +209,21 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     color: '#fff',
   },
+  subTitle:{
+    alignSelf: 'center',
+    position: 'absolute',
+    fontSize: 30,
+    top:75,
+    fontWeight:'bold',
+    color: '#E8E3DA',
+  },
   clearImage: {height: 40, width: 40, tintColor: '#FFF'},
   mainOuter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'absolute',
-    top: height / 1.6,
+    top: height / 1.7,
+    width: width / 1.5,
     alignSelf: 'center',
   },
   outer: {
@@ -218,6 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     borderColor: '#FFF',
+    
   },
   predictText:{
     color:'white',
@@ -241,8 +269,8 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   space: {marginVertical: 10, marginHorizontal: 10},
-  labelText: {color: '#fff', fontSize: 20, fontWeight:'bold'},
-  resultText: {fontSize: 32, fontWeight:'bold'},
+  labelText: {color:'#E8E3DA', fontSize: 25, fontWeight:'bold'},
+  resultText: {fontSize: 25, fontWeight:'bold', color:'#fff'},
   imageIcon: {height: 40, width: 40, tintColor: '#000'},
   emptyText: {
     position: 'absolute',
