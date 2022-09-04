@@ -4,16 +4,8 @@ import { StyleSheet, Text, View,
    Dimensions, TextInput, FlatList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { homeBackground, logo } from '../../assets';
-import { async } from '@firebase/util';
+import { newsSections } from './dataNewsSections';
 
-
-
-const newsSections = [
-{id: '0', text:'Tungro Padi', image:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Rice_plants_affected_by_tungro_disease1.jpg/640px-Rice_plants_affected_by_tungro_disease1.jpg'},
-{id: '1', text:'Blas Padi', image:'https://medialampung.co.id/wp-content/uploads/2020/09/blas.jpg'},
-{id: '2', text:'Bercak Coklat Daun', image:'https://krishijagran.com/media/42176/pest.png'},
-{id: '3', text:'Hawar Daun', image:'http://www.knowledgebank.irri.org/images/stories/bacterial-leaf-blight-1.JPG'}  
-]
 
 const News = () => {
   const [search,setSearch] = useState('')
@@ -42,6 +34,12 @@ const News = () => {
         <Image source={{uri:item.image}} style={{maxWidth:'100%', height:'35%', borderTopLeftRadius:20, borderTopRightRadius:20, resizeMode:'cover'}}/>
         <View style={styles.row}>
         <Text style={styles.ItemText}>{item.text}</Text>
+        <Text style={styles.ItemContentText}>{item.contentTitle}</Text>
+        <Text style={styles.ItemContentTextList}>{item.content_1}</Text>
+        <Text style={styles.ItemContentTextList}>{item.content_2}</Text>
+        <Text style={styles.ItemContentTextList}>{item.content_3}</Text>
+        <Text style={styles.ItemContentTextList}>{item.content_4}</Text>
+        <Text style={styles.ItemContentTextList}>{item.content_5}</Text>
         </View>
       </View>
       </ScrollView>
@@ -119,7 +117,12 @@ const styles = StyleSheet.create({
     color:'white',
     fontSize:25,
     fontWeight:'bold',
-    margin:10
+    marginLeft:10,
+    marginTop:10,
+    marginBottom:5,
+    borderBottomWidth:3,
+    borderColor:'white',
+    paddingBottom:5,
   },
   brandView:{
     flex:1,
@@ -150,5 +153,16 @@ const styles = StyleSheet.create({
   inputText:{
     height:50,
     color:"white"
+  },
+  ItemContentText:{
+    fontSize:16,
+    color:'white',
+    marginLeft:10
+  },
+  ItemContentTextList:{
+    fontSize:13,
+    padding:5,
+    color:'white',
+    marginLeft:10
   }
 })

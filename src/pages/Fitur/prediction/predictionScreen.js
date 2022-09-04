@@ -151,7 +151,7 @@ const PredictionScreen = () => {
             <Text style={styles.resultText}>{label}</Text>
           </Text>
           <Text style={[styles.space, styles.labelText]}>
-            {'Confidence: \n'}
+            {'Akurasi: \n'}
             <Text style={styles.resultText}>
               {parseFloat(result).toFixed(2) + '%'}
             </Text>
